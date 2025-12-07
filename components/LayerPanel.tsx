@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { MapLayer } from '../types';
-import { Download, Eye, EyeOff, Trash2 } from 'lucide-react';
+import { Download, Eye, EyeOff, Trash2, ArrowUp, ArrowDown } from 'lucide-react';
 
 interface LayerPanelProps {
   layers: MapLayer[];
@@ -100,7 +100,7 @@ export const LayerPanel: React.FC<LayerPanelProps> = ({
                             key={layer.id}
                             onClick={() => onSelectLayer(layer.id)}
                             className={`
-                            relative flex items-center gap-3 p-2 rounded-lg transition-all border
+                            relative group flex items-center gap-3 p-2 rounded-lg transition-all border
                             ${selectedLayerId === layer.id 
                                 ? 'bg-blue-900/40 border-blue-500/50 shadow-sm' 
                                 : 'bg-gray-800/40 border-transparent hover:bg-gray-800 hover:border-gray-700'}
@@ -127,6 +127,55 @@ export const LayerPanel: React.FC<LayerPanelProps> = ({
                             </div>
 
                             {/* Actions */}
-                            <div className="flex flex-col gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
-                            <button
-                                onClick={(e) => { e
+                            <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity bg-gray-900/80 rounded-lg p-1 absolute right-2 shadow-lg backdrop-blur-sm">
+                                <button
+                                    onClick={(e) => { e.stopPropagation(); onToggleVisibility(layer.id); }}
+                                    className="p-1 text-gray-400 hover:text-white rounded hover:bg-gray-700"
+                                    title={layer.visible ? "Hide Layer" : "Show Layer"}
+                                >
+                                    {layer.visible ? <Eye size={12} /> : <EyeOff size={12} />}
+                                </button>
+                                <button
+                                    onClick={(e) => { e.stopPropagation(); onMoveLayer(layer.id, 'up'); }}
+                                    className="p-1 text-gray-400 hover:text-white rounded hover:bg-gray-700"
+                                    title="Move Up"
+                                >
+                                    <ArrowUp size={12} />
+                                </button>
+                                <button
+                                    onClick={(e) => { e.stopPropagation(); onMoveLayer(layer.id, 'down'); }}
+                                    className="p-1 text-gray-400 hover:text-white rounded hover:bg-gray-700"
+                                    title="Move Down"
+                                >
+                                    <ArrowDown size={12} />
+                                </button>
+                                <button
+                                    onClick={(e) => { e.stopPropagation(); downloadLayer(layer); }}
+                                    className="p-1 text-gray-400 hover:text-white rounded hover:bg-gray-700"
+                                    title="Download PNG"
+                                >
+                                    <Download size={12} />
+                                </button>
+                                <button
+                                    onClick={(e) => { e.stopPropagation(); onDeleteLayer(layer.id); }}
+                                    className="p-1 text-gray-400 hover:text-red-400 rounded hover:bg-gray-700"
+                                    title="Delete Layer"
+                                >
+                                    <Trash2 size={12} />
+                                </button>
+                            </div>
+                        </div>
+                        ))}
+                     </div>
+                </div>
+            );
+        })}
+        {blockIds.length === 0 && (
+            <div className="text-center text-gray-500 text-sm mt-10">
+                No layers yet. Start by generating a base terrain!
+            </div>
+        )}
+      </div>
+    </div>
+  );
+};
