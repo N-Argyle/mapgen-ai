@@ -1,0 +1,5 @@
+{
+  "name": "MapGen AI",
+  "description": "A 2D game map generation tool powered by Gemini. Start with a base terrain, select regions, and generate custom assets like buildings or paths to build your world layer by layer.",
+  "requestFramePermissions": []
+}
